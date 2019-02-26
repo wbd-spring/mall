@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.wbd.mall.ordermgr.dao.OrderDetailDAO">  
+<!-- 添加ehches 有2种方式
+
+1.会输出日志;org.mybatis.caches.ehcache.LoggingEhcache
+2.不会输出日志;org.mybatis.caches.ehcache.EhcacheCache,默认情况下（只对select查询标签），所有的语句会放到ehcache
+如果不放入，可以通过设置useCache="false"
+ --> 
+  <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+     <insert id="create" parameterType="ODM">
+     	insert into tbl_orderDetail (orderUuid,goodsUuid,orderNum,price,money,saveMoney) 
+     	 values(#{orderUuid},#{goodsUuid},#{orderNum},#{price},#{money},#{saveMoney})
+     </insert>
+     <update id="update" parameterType="ODM">
+     	update tbl_orderDetail set orderUuid=#{orderUuid},goodsUuid=#{goodsUuid},orderNum=#{orderNum},price=#{price},money=#{money},saveMoney=#{saveMoney}
+     	   	where uuid=#{uuid}
+     </update>
+     <delete id="delete" parameterType="int">
+     	delete from tbl_orderDetail where uuid=#{uuid}
+     </delete>
+     
+    <select id="getByUuid" parameterType="int" resultType="ODM">  
+        select * from tbl_orderDetail where uuid=#{uuid}
+    </select>  
+    <select id="getByConditionPage" parameterType="ODQM" resultType="ODM">  
+        select * from tbl_orderDetail
+        <where>
+        	<if test="uuid!=null &amp;&amp; uuid > 0">
+        		and uuid=#{uuid}
+        	</if>  
+        	
+        	<if test="orderUuid!=null">
+        		and orderUuid=#{orderUuid}
+        	</if>  
+      
+        	<if test="goodsUuid!=null">
+        		and goodsUuid=#{goodsUuid}
+        	</if>  
+        	
+        	<if test="orderNum!=null">
+        		and orderNum=#{orderNum}
+        	</if> 
+        	
+        	
+        </where>
+        
+    </select> 
+</mapper>
